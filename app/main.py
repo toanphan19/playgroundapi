@@ -1,6 +1,9 @@
+import logging
+
 from fastapi import FastAPI
 from pydantic import BaseModel
-import logging
+
+from app import wordle
 
 from . import gpt3
 
@@ -24,3 +27,10 @@ async def openai_summarize(request_body: SummarizeInput):
     """Summarize a piece of text with OpenAI GPT-3."""
     logger.info(f"/gpt3/summarize request_body: {request_body}")
     return gpt3.summarize(request_body.text)
+
+
+@app.get("/wordle/random")
+async def wordle_random():
+    """Randomize a 5-letter word."""
+    word = wordle.solver.choose_random_word()
+    return {"word": word}
