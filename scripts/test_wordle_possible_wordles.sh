@@ -1,0 +1,1 @@
+curl -X POST "http://localhost:8000/wordle/possible_wordles" -H "Content-Type: application/json" -d @scripts/test_wordle_possible_wordles.json;

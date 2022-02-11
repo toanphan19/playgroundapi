@@ -1,9 +1,10 @@
 import logging
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from app import wordle
+from app.wordle.solver import Guess
 
 from . import gpt3
 
@@ -29,8 +30,36 @@ async def openai_summarize(request_body: SummarizeInput):
     return gpt3.summarize(request_body.text)
 
 
+# ===
+# WORDLE SOLVER
+# ===
+
+
 @app.get("/wordle/random")
 async def wordle_random():
     """Randomize a 5-letter word."""
     word = wordle.solver.choose_random_word()
     return {"word": word}
+
+
+class GuessInput(BaseModel):
+    guesses: list[Guess]
+
+
+@app.post("/wordle/possible_wordles")
+async def wordle_possible_wordles(request_body: GuessInput):
+    """Guess the word based on existing guesses."""
+    guesses = request_body.guesses
+
+    # Check valid
+    for guess in guesses:
+        if not guess.is_valid():
+            raise HTTPException(
+                status_code=400, detail="Invalid guess (incorrect guess word or hints)"
+            )
+
+    possible_wordles = wordle.solver.find_candidate_results(guesses)
+
+    return {
+        "possible_wordles": possible_wordles,
+    }
