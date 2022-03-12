@@ -25,3 +25,8 @@ class Guess(BaseModel):
                 return False
 
         return True
+
+
+class CandidateWord(BaseModel):
+    word: str
+    score: float

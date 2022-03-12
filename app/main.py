@@ -46,8 +46,8 @@ class GuessInput(BaseModel):
     guesses: list[Guess]
 
 
-@app.post("/wordle/possible_wordles")
-async def wordle_possible_wordles(request_body: GuessInput):
+@app.post("/wordle/solver")
+async def wordle_solver(request_body: GuessInput):
     """Guess the word based on existing guesses."""
     guesses = request_body.guesses
 
