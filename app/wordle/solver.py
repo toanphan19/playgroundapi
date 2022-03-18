@@ -36,13 +36,24 @@ def _filter_candidate_results(candidate_results: list[str], guess: Guess) -> lis
     return filtered
 
 
-def _guess_align_with_word(guess: Guess, word: str):
+def _guess_align_with_word(guess: Guess, word: str) -> bool:
     if len(guess.word) != len(word):
         raise ValueError(
             f"lenght of guess and candidate word do not match:"
             + f"guess={guess.word}, candidate_word={word}"
         )
 
+    # 1st constraint: number of letters must match:
+    letter_occurances: dict[str, int] = {}
+    for i, letter in enumerate(guess.word):
+        if guess.hints[i] in ("I", "C"):
+            letter_occurances[letter] = 1 + (letter_occurances.get(letter) or 0)
+
+    for letter, occurances in letter_occurances.items():
+        if word.count(letter) != occurances:
+            return False
+
+    # 2nd constrant: letters position must match:
     hints = guess.hints.upper()
     for pos, hint in enumerate(hints):
         if hint == "N":
