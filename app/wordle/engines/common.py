@@ -60,7 +60,7 @@ def _guess_align_with_word(guess: Guess, word: str) -> bool:
             letter_occurances[letter] = 1 + (letter_occurances.get(letter) or 0)
 
     for letter, occurances in letter_occurances.items():
-        if word.count(letter) != occurances:
+        if word.count(letter) < occurances:
             return False
 
     # 2nd constrant: letters position must match:
