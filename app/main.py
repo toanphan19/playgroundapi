@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -59,6 +60,7 @@ async def wordle_random():
 
 class GuessInput(BaseModel):
     guesses: list[Guess]
+    engine: Optional[str]
 
 
 @app.post("/wordle/solver")

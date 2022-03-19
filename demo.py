@@ -14,8 +14,13 @@ def demo_find_candidate_results():
     # word = humor
     guesses = [
         Guess(word="drama", hints="NNINI"),
+        Guess(word="tenio", hints="INNNN"),
     ]
-    candidate_results = wordle.solver.find_candidate_results(guesses)
+    candidate_results = wordle.solver.find_candidate_results(
+        guesses,
+        engine="best_overall"
+        # solver="highest_matches",
+    )
     for cr in candidate_results:
         print(cr)
 
