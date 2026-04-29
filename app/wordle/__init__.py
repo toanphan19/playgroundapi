@@ -1,2 +1,2 @@
-from . import dictionary, solver, models
+from . import dictionary, models, solvers
 from .models import *

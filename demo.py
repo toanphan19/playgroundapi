@@ -1,5 +1,5 @@
 from app import wordle
-from app.wordle.solver import Guess
+from app.wordle.solvers import Guess
 
 
 def demo_find_candidate_results():
@@ -16,7 +16,7 @@ def demo_find_candidate_results():
         Guess(word="lover", hints="IINNN"),
         Guess(word="gloam", hints="NCIIN"),
     ]
-    candidate_results = wordle.solver.find_candidate_results(
+    candidate_results = wordle.solvers.find_candidate_results(
         guesses,
         # engine="best_overall"
         engine="highest_matches",

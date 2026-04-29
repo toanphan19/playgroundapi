@@ -6,9 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app import wordle
-from app.wordle.solver import Guess
-
-from . import gpt3
+from app.wordle.solvers import Guess
 
 app = FastAPI()
 
@@ -39,13 +37,6 @@ class SummarizeInput(BaseModel):
     text: str
 
 
-@app.post("/gpt3/summarize")
-async def openai_summarize(request_body: SummarizeInput):
-    """Summarize a piece of text with OpenAI GPT-3."""
-    logger.info(f"/gpt3/summarize request_body: {request_body}")
-    return gpt3.summarize(request_body.text)
-
-
 # ===
 # WORDLE SOLVER
 # ===
@@ -54,7 +45,7 @@ async def openai_summarize(request_body: SummarizeInput):
 @app.get("/wordle/random")
 async def wordle_random():
     """Randomize a 5-letter word."""
-    word = wordle.solver.choose_random_word()
+    word = wordle.solvers.choose_random_word()
     return {"word": word}
 
 
@@ -75,7 +66,7 @@ async def wordle_solver(request_body: GuessInput):
                 status_code=400, detail="Invalid guess (incorrect guess word or hints)"
             )
 
-    possible_wordles = wordle.solver.find_candidate_results(guesses)
+    possible_wordles = wordle.solvers.find_candidate_results(guesses)
 
     return {
         "possible_wordles": possible_wordles,
