@@ -1,0 +1,17 @@
+[project]
+name = "playgroundapi"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.136.1",
+    "psycopg[binary]>=3.3.3",
+    "structlog>=25.5.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.3.1",
+    "pytest>=9.0.3",
+]
