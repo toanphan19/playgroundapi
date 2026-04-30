@@ -67,8 +67,14 @@ def _guess_align_with_word(guess: Guess, word: str) -> bool:
     hints = guess.hints.upper()
     for pos, hint in enumerate(hints):
         if hint == "N":
-            if guess.word[pos] in word:
-                return False
+            letter = guess.word[pos]
+            if letter in letter_occurances:
+                # Duplicate letter: N means no more occurrences than the C/I count
+                if word.count(letter) != letter_occurances[letter]:
+                    return False
+            else:
+                if letter in word:
+                    return False
         if hint == "C":
             if word[pos] != guess.word[pos]:
                 return False
