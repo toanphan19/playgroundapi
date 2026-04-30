@@ -88,7 +88,7 @@ async def wordle_random():
 
 class GuessInput(BaseModel):
     guesses: list[Guess]
-    engine: Optional[str]
+    engine: str | None = None
 
 
 @app.post("/wordle/solver")
