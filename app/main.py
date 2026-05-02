@@ -13,16 +13,22 @@ from app.wordle.solvers import Guess
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",
-    "http://localhost:8080",
     "https://playground.toanphan.dev",
+    "https://toanphan.com",
 ]
+
+if os.getenv("MYENV") == "local":
+    origins += [
+        "http://127.0.0.1:1111",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:8080",
+    ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
@@ -43,11 +49,11 @@ class SummarizeInput(BaseModel):
 # Others
 # ===
 @app.get("/hckernews/top")
-def hckernews_top(days: int):
+def hckernews_top(days: int, limit: int = 10):
     conn_str = os.environ["SUPABASE_SESSION_CONN_STR"]
     with psycopg.connect(conn_str) as conn:
         with conn.cursor() as cur:
-            stories = get_top_stories(cur, days)
+            stories = get_top_stories(cur, days, limit)
             conn.commit()
             return {"stories": stories}
 
