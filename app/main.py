@@ -4,10 +4,10 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import psycopg
 from pydantic import BaseModel
 
 from app import wordle
+from app import hnews
 from app.wordle.solvers import Guess
 
 app = FastAPI()
@@ -51,33 +51,8 @@ class SummarizeInput(BaseModel):
 @app.get("/hckernews/top")
 def hckernews_top(days: int, limit: int = 10):
     conn_str = os.environ["SUPABASE_SESSION_CONN_STR"]
-    with psycopg.connect(conn_str) as conn:
-        with conn.cursor() as cur:
-            stories = get_top_stories(cur, days, limit)
-            conn.commit()
-            return {"stories": stories}
-
-
-def get_top_stories(cur, nr_days: int, limit: int = 20):
-    limit = min(50, limit)
-    sql = """
-            select 
-                id,
-                time,
-                title,
-                url,
-                score,
-                comments
-            from hn_stories
-            where time > now() - make_interval(days => %s)
-            order by score desc
-            limit %s;
-            """
-    cur.execute(sql, (nr_days, limit))
-    rows = cur.fetchall()
-    print(len(rows))
-
-    return rows
+    stories = hnews.get_top_stories(conn_str, days, limit)
+    return {"stories": stories}
 
 
 # ===
